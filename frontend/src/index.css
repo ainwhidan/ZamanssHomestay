@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+html, body, #root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+:root {
+  --primary: #1a6fbd;
+  --primary-dark: #135299;
+  --primary-light: #e8f2fc;
+  --dark: #0f1923;
+  --text: #2d3748;
+  --text-light: #718096;
+  --border: #e2e8f0;
+  --bg: #ffffff;
+  --bg-soft: #f7f9fc;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 6px 24px rgba(0,0,0,0.10);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.14);
+  --transition: all 0.3s ease;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+img { max-width: 100%; display: block; }
+input, select, button { font-family: var(--font-body); outline: none; }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+main {
+  width: 100%;
+  overflow-x: hidden;
+}

@@ -1,0 +1,48 @@
+.footer { background: #0f1923; color: rgba(255,255,255,0.75); }
+
+.footer-top {
+  max-width: 1200px; margin: 0 auto; padding: 64px 24px 48px;
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 48px;
+}
+
+.footer-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem; font-weight: 700;
+  color: #fff; text-decoration: none; display: block; margin-bottom: 16px;
+}
+
+.footer-brand p { font-size: 0.875rem; line-height: 1.8; margin-bottom: 20px; }
+
+.social-links { display: flex; flex-direction: column; gap: 6px; }
+.social-links a {
+  font-size: 0.82rem; color: rgba(255,255,255,0.55);
+  text-decoration: none; transition: all 0.3s ease;
+}
+.social-links a:hover { color: #fff; }
+
+.footer-links h4, .footer-contact h4 {
+  color: #fff; font-size: 0.9rem; font-weight: 700; margin-bottom: 16px;
+}
+
+.footer-links ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.footer-links a {
+  font-size: 0.875rem; color: rgba(255,255,255,0.6);
+  text-decoration: none; transition: all 0.3s ease;
+}
+.footer-links a:hover { color: #fff; padding-left: 4px; }
+
+.footer-contact p { font-size: 0.875rem; margin-bottom: 8px; }
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding: 20px 24px; text-align: center;
+  font-size: 0.82rem; color: rgba(255,255,255,0.4);
+}
+
+@media (max-width: 1024px) {
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; }
+}
+
+@media (max-width: 560px) {
+  .footer-top { grid-template-columns: 1fr; }
+}
