@@ -7,10 +7,10 @@ function Home() {
   const [homestays, setHomestays] = useState([]);
   const [loading,   setLoading]   = useState(true);
   const [search, setSearch] = useState({
-    location: 'All Homestays',
+    location: 'All',
     checkin:  '',
     checkout: '',
-    guests:   '1 Guest',
+    guests:   '1',
   });
 
   const navigate  = useNavigate();
@@ -24,12 +24,28 @@ function Home() {
   }, []);
 
   const handleSearch = () => {
-    if (!search.checkin || !search.checkout) {
-      alert('Please select check-in and check-out dates.');
-      return;
-    }
-    navigate(`/search?location=${encodeURIComponent(search.location)}&checkin=${search.checkin}&checkout=${search.checkout}&guests=${encodeURIComponent(search.guests)}`);
-  };
+  if (!search.checkin || !search.checkout) {
+    alert('Please select check-in and check-out dates.');
+    return;
+  }
+
+  const params = `checkin=${search.checkin}&checkout=${search.checkout}&guests=${search.guests}`;
+
+  // All Homestays → pergi listing page, bawa dates sekali
+  if (search.location === 'All Homestays') {
+    navigate(`/homestays?${params}`);
+    return;
+  }
+
+  // Specific homestay → pergi detail page terus
+  const selected = homestays.find(hs => hs.name === search.location);
+  if (selected) {
+    navigate(`/homestays/${selected.id}?${params}`);
+    return;
+  }
+
+  navigate(`/homestays?${params}`);
+};
 
   return (
     <>
@@ -67,13 +83,16 @@ function Home() {
                 onChange={e => setSearch({...search, checkout: e.target.value})} />
             </div>
             <div className="search-divider"></div>
-            <div className="search-field">
+           <div className="search-field">
               <label>Guests</label>
-              <select value={search.guests} onChange={e => setSearch({...search, guests: e.target.value})}>
-                {[1,2,3,4,5,6,7,8,9,10].map(g => (
-                  <option key={g}>{g} Guest{g > 1 ? 's' : ''}</option>
-                ))}
-              </select>
+              <input
+                type="number"
+                min="1"
+                max="20"
+                value={search.guests}
+                placeholder="1"
+                onChange={e => setSearch({...search, guests: e.target.value})}
+              />
             </div>
             <button className="search-btn" onClick={handleSearch}>Search</button>
           </div>
@@ -140,10 +159,10 @@ function Home() {
           </div>
           <div className="why-grid">
             {[
-              { icon: '🏡', title: 'Handpicked Properties',  desc: 'Every homestay is personally vetted for cleanliness, safety, and comfort.' },
-              { icon: '📅', title: 'Easy Booking',           desc: 'Simple and fast booking process — confirmed in minutes, no hassle.' },
-              { icon: '💬', title: '24/7 Support',           desc: 'Our friendly team is always ready to assist you before and during your stay.' },
-              { icon: '🔒', title: 'Secure Payment',         desc: 'Your bookings and payments are fully protected and encrypted.' },
+              { title: 'Handpicked Properties',  desc: 'Every homestay is personally vetted for cleanliness, safety, and comfort.' },
+              { title: 'Easy Booking',           desc: 'Simple and fast booking process — confirmed in minutes, no hassle.' },
+              { title: '24/7 Support',           desc: 'Our friendly team is always ready to assist you before and during your stay.' },
+              { title: 'Secure Payment',         desc: 'Your bookings and payments are fully protected and encrypted.' },
             ].map((item, i) => (
               <div className="why-card" key={i}>
                 <div className="why-icon">{item.icon}</div>

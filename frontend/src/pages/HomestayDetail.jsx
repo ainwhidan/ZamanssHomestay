@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import API from '../api';
 import './HomestayDetail.css';
 
@@ -28,18 +28,35 @@ const ICONS = {
 };
 
 function HomestayDetail() {
-  const { id } = useParams();
-  const [hs,       setHs]       = useState(null);
-  const [others,   setOthers]   = useState([]);
-  const [loading,  setLoading]  = useState(true);
-  const [mainImg,  setMainImg]  = useState(0);
-  const [checkin,  setCheckin]  = useState('');
-  const [checkout, setCheckout] = useState('');
-  const [guests,   setGuests]   = useState(1);
-  const [nights,   setNights]   = useState(0);
+  const { id }         = useParams();
+  const [searchParams] = useSearchParams();
+
+  const urlCheckin  = searchParams.get('checkin')  || '';
+  const urlCheckout = searchParams.get('checkout') || '';
+  const urlGuests   = parseInt(searchParams.get('guests') || 1);
+
+  const [hs,          setHs]          = useState(null);
+  const [others,      setOthers]      = useState([]);
+  const [loading,     setLoading]     = useState(true);
+  const [mainImg,     setMainImg]     = useState(0);
+  const [checkin,     setCheckin]     = useState(urlCheckin);
+  const [checkout,    setCheckout]    = useState(urlCheckout);
+  const [guests,      setGuests]      = useState(urlGuests);
+  const [nights,      setNights]      = useState(0);
+  const [unavailable, setUnavailable] = useState(false);
+  const [checking,    setChecking]    = useState(false);
+
+  // ===========================
+  // REVIEWS / RATING
+  // ===========================
+  const [reviews,        setReviews]        = useState([]);
+  const [reviewsLoading,  setReviewsLoading] = useState(true);
 
   const today = new Date().toISOString().split('T')[0];
 
+  // ===========================
+  // FETCH HOMESTAY DATA
+  // ===========================
   useEffect(() => {
     setLoading(true);
     API.get(`/homestays/${id}`)
@@ -51,14 +68,41 @@ function HomestayDetail() {
       .then(res => setOthers(res.data.filter(h => h.id !== parseInt(id)).slice(0, 4)));
   }, [id]);
 
+  // ===========================
+  // FETCH REVIEWS (published only)
+  // ===========================
+  useEffect(() => {
+    setReviewsLoading(true);
+    API.get(`/reviews/homestay/${id}`)
+      .then(res => setReviews(res.data))
+      .catch(() => setReviews([]))
+      .finally(() => setReviewsLoading(false));
+  }, [id]);
+
+  // ===========================
+  // CHECK AVAILABILITY
+  // ===========================
   useEffect(() => {
     if (checkin && checkout) {
-      const d1 = new Date(checkin);
-      const d2 = new Date(checkout);
-      const n  = Math.ceil((d2 - d1) / 86400000);
+      const n = Math.ceil((new Date(checkout) - new Date(checkin)) / 86400000);
       setNights(n > 0 ? n : 0);
+
+      setChecking(true);
+      API.get(`/bookings/availability?homestay_id=${id}`)
+        .then(res => {
+          const clash = res.data.some(b =>
+            new Date(checkin)  < new Date(b.checkout_date) &&
+            new Date(checkout) > new Date(b.checkin_date)
+          );
+          setUnavailable(clash);
+        })
+        .catch(() => setUnavailable(false))
+        .finally(() => setChecking(false));
+    } else {
+      setNights(0);
+      setUnavailable(false);
     }
-  }, [checkin, checkout]);
+  }, [checkin, checkout, id]);
 
   if (loading) return <div className="detail-loading">Loading...</div>;
   if (!hs)     return null;
@@ -68,6 +112,11 @@ function HomestayDetail() {
   const ext       = hs.image?.split('.').pop();
   const images    = [hs.image, `${baseImg}b.${ext}`, `${baseImg}c.${ext}`, `${baseImg}d.${ext}`];
   const map       = MAPS[id] || MAPS[1];
+  const bookingUrl = `/booking?id=${id}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`;
+
+  const avgRating = reviews.length
+    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+    : null;
 
   return (
     <>
@@ -89,7 +138,7 @@ function HomestayDetail() {
             </div>
             <div className="detail-price-block">
               <div className="detail-price">RM {Math.round(hs.price_per_night)} <small>/ night</small></div>
-              <Link to={`/booking?id=${id}`} className="btn-book-now">Book Now</Link>
+              <Link to={bookingUrl} className="btn-book-now">Book Now</Link>
             </div>
           </div>
         </div>
@@ -123,7 +172,6 @@ function HomestayDetail() {
             {/* LEFT */}
             <div className="detail-main-col">
 
-              {/* Quick Info */}
               <div className="quick-info">
                 <div className="quick-info-item"><span className="qi-icon">🛏</span><div><strong>{hs.rooms} Rooms</strong><small>Bedrooms</small></div></div>
                 <div className="quick-info-item"><span className="qi-icon">🛁</span><div><strong>{hs.bathrooms} Bath</strong><small>Bathrooms</small></div></div>
@@ -131,13 +179,11 @@ function HomestayDetail() {
                 <div className="quick-info-item"><span className="qi-icon">🏡</span><div><strong>Entire Home</strong><small>Private property</small></div></div>
               </div>
 
-              {/* Description */}
               <div className="detail-section">
                 <h2>About This Homestay</h2>
                 <p>{hs.description}</p>
               </div>
 
-              {/* Amenities */}
               <div className="detail-section">
                 <h2>Amenities</h2>
                 <div className="amenities-grid">
@@ -148,7 +194,6 @@ function HomestayDetail() {
                 </div>
               </div>
 
-              {/* Rules */}
               <div className="detail-section">
                 <h2>House Rules</h2>
                 <ul className="rules-list">
@@ -156,7 +201,38 @@ function HomestayDetail() {
                 </ul>
               </div>
 
-              {/* Map */}
+              <div className="detail-section">
+                <h2>Guest Reviews {reviews.length > 0 && `(${reviews.length})`}</h2>
+
+                {reviewsLoading ? (
+                  <p>Loading reviews...</p>
+                ) : reviews.length === 0 ? (
+                  <p className="no-reviews">No reviews yet. Be the first to stay and share your experience!</p>
+                ) : (
+                  <>
+                    <div className="rating-summary">
+                      <span className="rating-summary-score">⭐ {avgRating}</span>
+                      <span className="rating-summary-count">based on {reviews.length} review{reviews.length > 1 ? 's' : ''}</span>
+                    </div>
+
+                    <div className="review-list">
+                      {reviews.map(r => (
+                        <div className="review-card" key={r.id}>
+                          <div className="review-card-head">
+                            <strong>{r.user_name}</strong>
+                            <span className="review-stars">{'⭐'.repeat(r.rating)}</span>
+                          </div>
+                          {r.comment && <p className="review-comment">{r.comment}</p>}
+                          <small className="review-date">
+                            {new Date(r.created_at).toLocaleDateString('en-MY', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          </small>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+
               <div className="detail-section">
                 <h2>Location</h2>
                 <p className="map-address">📍 {hs.location}</p>
@@ -182,7 +258,10 @@ function HomestayDetail() {
                     <div className="widget-field">
                       <label>Check-in</label>
                       <input type="date" min={today} value={checkin}
-                        onChange={e => setCheckin(e.target.value)} />
+                        onChange={e => {
+                          setCheckin(e.target.value);
+                          if (checkout && checkout <= e.target.value) setCheckout('');
+                        }} />
                     </div>
                     <div className="widget-field">
                       <label>Check-out</label>
@@ -193,7 +272,7 @@ function HomestayDetail() {
 
                   <div className="widget-field full">
                     <label>Guests</label>
-                    <select value={guests} onChange={e => setGuests(e.target.value)}>
+                    <select value={guests} onChange={e => setGuests(parseInt(e.target.value))}>
                       {Array.from({length: hs.max_guests}, (_, i) => i + 1).map(g => (
                         <option key={g} value={g}>{g} Guest{g > 1 ? 's' : ''}</option>
                       ))}
@@ -210,11 +289,18 @@ function HomestayDetail() {
                     </div>
                   )}
 
-                  <Link
-                    to={`/booking?id=${id}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`}
-                    className="widget-book-btn">
-                    Reserve Now
-                  </Link>
+                  {unavailable ? (
+                    <div className="unavailable-msg">
+                      <span>🚫 Not Available</span>
+                      <small>These dates are already booked. Please choose different dates.</small>
+                    </div>
+                  ) : (
+                    <Link to={bookingUrl}
+                      className={`widget-book-btn ${checking ? 'disabled' : ''}`}
+                      onClick={e => { if (checking || unavailable) e.preventDefault(); }}>
+                      {checking ? 'Checking...' : 'Reserve Now'}
+                    </Link>
+                  )}
                   <p className="widget-note">You won't be charged yet</p>
                 </div>
               </div>
@@ -222,7 +308,9 @@ function HomestayDetail() {
               <div className="contact-host">
                 <h4>Need help?</h4>
                 <p>Contact us for special requests.</p>
-                <a href="https://wa.me/601112345678" className="btn-whatsapp" target="_blank" rel="noreferrer">💬 WhatsApp Us</a>
+                <a href="https://wa.me/601112345678" className="btn-whatsapp" target="_blank" rel="noreferrer">
+                  💬 WhatsApp Us
+                </a>
                 <Link to="/contact" className="btn-contact-link">Or send us a message →</Link>
               </div>
             </div>
@@ -231,7 +319,6 @@ function HomestayDetail() {
         </div>
       </section>
 
-      {/* OTHER HOMESTAYS */}
       {others.length > 0 && (
         <section className="other-homestays">
           <div className="container">

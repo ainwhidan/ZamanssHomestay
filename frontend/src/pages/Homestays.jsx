@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import API from '../api';
 import './Homestays.css';
 
@@ -7,6 +7,17 @@ function Homestays() {
   const [homestays, setHomestays] = useState([]);
   const [loading,   setLoading]   = useState(true);
   const [sortBy,    setSortBy]    = useState('recommended');
+  const [searchParams] = useSearchParams();
+
+  // Ambil dates dari URL (kalau datang dari search)
+  const checkin  = searchParams.get('checkin')  || '';
+  const checkout = searchParams.get('checkout') || '';
+  const guests    = searchParams.get('guests')  || '';
+
+  // Build query string untuk pass ke detail page
+  const dateParams = checkin && checkout
+    ? `?checkin=${checkin}&checkout=${checkout}&guests=${guests}`
+    : '';
 
   useEffect(() => {
     API.get('/homestays')
@@ -27,7 +38,7 @@ function Homestays() {
       {/* PAGE HERO */}
       <section className="page-hero">
         <div className="container">
-          <p className="section-tag" style={{color: 'rgba(255,255,255,0.7)'}}>Where to Stay</p>
+          <p className="section-tag" style={{ color: 'rgba(255,255,255,0.7)' }}>Where to Stay</p>
           <h1>Our Homestays</h1>
           <p>{homestays.length} handpicked properties in Ipoh, Perak — each unique, all exceptional.</p>
         </div>
@@ -36,6 +47,18 @@ function Homestays() {
       {/* HOMESTAY LIST */}
       <section className="homestays-page">
         <div className="container">
+
+          {/* SEARCH DATES BANNER */}
+          {checkin && checkout && (
+            <div className="search-dates-banner">
+              <span>
+                Showing availability for <strong>{new Date(checkin).toLocaleDateString('en-MY', { day: 'numeric', month: 'short' })}</strong>
+                {' → '}
+                <strong>{new Date(checkout).toLocaleDateString('en-MY', { day: 'numeric', month: 'short', year: 'numeric' })}</strong>
+                {' · '}{guests} guest{guests > 1 ? 's' : ''}
+              </span>
+            </div>
+          )}
 
           {/* FILTER BAR */}
           <div className="filter-bar">
@@ -87,8 +110,8 @@ function Homestays() {
                           RM {Math.round(hs.price_per_night)} <small>/ night</small>
                         </div>
                         <div className="hs-actions">
-                          <Link to={`/homestays/${hs.id}`} className="btn-detail">View Details</Link>
-                          <Link to={`/homestays/${hs.id}`} className="btn-book">Book Now</Link>
+                          <Link to={`/homestays/${hs.id}${dateParams}`} className="btn-detail">View Details</Link>
+                          <Link to={`/homestays/${hs.id}${dateParams}`} className="btn-book">Book Now</Link>
                         </div>
                       </div>
                     </div>

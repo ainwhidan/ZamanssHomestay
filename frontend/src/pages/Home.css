@@ -236,3 +236,7 @@ body {
   .cards-grid { grid-template-columns: 1fr; }
   .why-grid { grid-template-columns: 1fr; }
 }
+
+.why-grid .why-card:last-child:nth-child(3n+1) {
+  grid-column: 2 / 3;
+}

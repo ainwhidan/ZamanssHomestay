@@ -46,15 +46,10 @@ function Register() {
       <div className="auth-left">
         <div className="auth-left-content">
           <Link to="/" className="auth-logo">
-            <span>🏡 Zamanss Homestay</span>
+            <span>Zamanss Homestay</span>
           </Link>
           <h2>Join us today!</h2>
           <p>Create your account and start booking your perfect homestay experience in Ipoh, Perak.</p>
-          <div className="auth-features">
-            <div className="auth-feature"><span className="feature-icon">⚡</span><span>Quick & easy booking</span></div>
-            <div className="auth-feature"><span className="feature-icon">🔒</span><span>Secure & private account</span></div>
-            <div className="auth-feature"><span className="feature-icon">💬</span><span>24/7 customer support</span></div>
-          </div>
         </div>
       </div>
 
@@ -73,7 +68,7 @@ function Register() {
             <div className="form-group">
               <label>Full Name</label>
               <div className="input-wrap">
-                <span className="input-icon">👤</span>
+              
                 <input type="text" name="name" placeholder="Your full name"
                   value={form.name} onChange={handleChange} required />
               </div>
@@ -82,7 +77,6 @@ function Register() {
             <div className="form-group">
               <label>Email Address</label>
               <div className="input-wrap">
-                <span className="input-icon">✉️</span>
                 <input type="email" name="email" placeholder="you@example.com"
                   value={form.email} onChange={handleChange} required />
               </div>
@@ -91,7 +85,6 @@ function Register() {
             <div className="form-group">
               <label>Phone Number</label>
               <div className="input-wrap">
-                <span className="input-icon">📞</span>
                 <input type="tel" name="phone" placeholder="01X-XXXXXXX"
                   value={form.phone} onChange={handleChange} />
               </div>
@@ -100,7 +93,6 @@ function Register() {
             <div className="form-group">
               <label>Password</label>
               <div className="input-wrap">
-                <span className="input-icon">🔒</span>
                 <input type="password" name="password" placeholder="Minimum 8 characters"
                   value={form.password} onChange={handleChange} required />
               </div>
@@ -109,7 +101,6 @@ function Register() {
             <div className="form-group">
               <label>Confirm Password</label>
               <div className="input-wrap">
-                <span className="input-icon">🔒</span>
                 <input type="password" name="confirm_password" placeholder="Repeat your password"
                   value={form.confirm_password} onChange={handleChange} required />
               </div>

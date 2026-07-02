@@ -9,13 +9,11 @@ function Footer() {
       <div className="footer-top">
 
         <div className="footer-brand">
-          <Link to="/" className="footer-logo">🏡 Zamanss Homestay</Link>
+          <Link to="/" className="footer-logo">Zamanss Homestay</Link>
           <p>Your home away from home in the heart of Perak, Malaysia. Warm, comfortable, and affordable stays for everyone.</p>
           <div className="social-links">
-            <a href="#">📘 Facebook</a>
-            <a href="#">📸 Instagram</a>
-            <a href="#">🐦 Twitter</a>
-          </div>
+          <a href="https://www.facebook.com/share/1DerczgEPj/?mibextid=wwXIfr&ref=2" target="_blank" rel="noreferrer">Facebook</a>
+        </div>
         </div>
 
         <div className="footer-links">
@@ -43,8 +41,8 @@ function Footer() {
         <div className="footer-contact">
           <h4>Contact Us</h4>
           <p>📍 Ipoh, Perak, Malaysia</p>
-          <p>📞 +60 11-1234 5678</p>
-          <p>✉️ hello@zamanss.com.my</p>
+          <p>📞 +60 16 204 2291</p>
+          <p>✉️ zamansshomestay@gmail.com</p>
           <p>🕐 Mon–Sun: 8am – 10pm</p>
         </div>
 

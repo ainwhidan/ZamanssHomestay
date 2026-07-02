@@ -126,3 +126,155 @@
   .nav-actions { display: none; }
   .hamburger { display: flex; }
 }
+
+.profile-wrap {
+  position: relative;
+}
+ 
+/* Button avatar yang boleh click */
+.profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 10px 4px 4px;
+  border-radius: 99px;
+  transition: background 0.2s ease;
+}
+.profile-btn:hover {
+  background: #e8f2fc;
+}
+ 
+/* Bulatan initials */
+.profile-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a6fbd, #2d8de0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(26, 111, 189, 0.35);
+}
+ 
+/* Nama user */
+.profile-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f1923;
+  max-width: 110px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+ 
+/* Anak panah chevron */
+.profile-chevron {
+  font-size: 0.7rem;
+  color: #718096;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+.profile-chevron.open {
+  transform: rotate(180deg);
+}
+ 
+/* Panel dropdown */
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 210px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.14);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  animation: pdFadeIn 0.18s ease;
+  z-index: 1000;
+}
+@keyframes pdFadeIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+ 
+/* Header — nama & email */
+.pd-header {
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f7f9fc;
+}
+.pd-fullname {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0f1923;
+}
+.pd-email {
+  display: block;
+  font-size: 0.72rem;
+  color: #718096;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+ 
+/* Body — menu items */
+.pd-body {
+  padding: 6px 0;
+}
+ 
+/* Item links & button */
+.pd-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #2d3748;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease, color 0.15s ease;
+  font-family: inherit;
+}
+.pd-item:hover {
+  background: #f7f9fc;
+  color: #1a6fbd;
+}
+ 
+.pd-icon {
+  font-size: 1rem;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+ 
+/* Divider */
+.pd-sep {
+  height: 1px;
+  background: #e2e8f0;
+  margin: 4px 0;
+}
+ 
+/* Sign out — merah */
+.pd-logout {
+  color: #c53030;
+}
+.pd-logout:hover {
+  background: #fff5f5;
+  color: #c53030;
+}
+ 

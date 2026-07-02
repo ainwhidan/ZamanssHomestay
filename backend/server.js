@@ -5,20 +5,29 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-// CORS — allow React (port 5173) to talk to this server
 app.use(cors({ origin: 'http://localhost:5173' }));
-
-// Parse JSON request body
 app.use(express.json());
 
 // Routes
 const homestayRoutes = require('./routes/homestays');
 const authRoutes     = require('./routes/auth');
+const bookingsRouter = require('./routes/bookings');
+const adminRoutes    = require('./routes/admin');
+const reviewsRouter = require('./routes/reviews');
+const refundsRouter = require('./routes/refunds');
+const contactRouter = require('./routes/contact');
+
+
 
 app.use('/api/homestays', homestayRoutes);
 app.use('/api/auth',      authRoutes);
+app.use('/api/bookings',  bookingsRouter);
+app.use('/api/admin',     adminRoutes);
+app.use('/api/reviews', reviewsRouter);
+app.use('/api/refunds', refundsRouter);
+app.use('/api/contact', contactRouter);
 
-// Test route — to check server is running
+// Test route
 app.get('/', (req, res) => {
   res.json({ message: 'Zamanss Homestay API is running!' });
 });

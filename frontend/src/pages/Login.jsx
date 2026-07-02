@@ -20,7 +20,12 @@ function Login() {
       const res = await API.post('/auth/login', form);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user',  JSON.stringify(res.data.user));
-      navigate('/');
+
+if (res.data.user.role === 'admin') {
+  navigate('/admin');
+} else {
+  navigate('/');
+}
     } catch (err) {
       setError(err.response?.data?.error || 'Something went wrong.');
     } finally {
@@ -35,15 +40,10 @@ function Login() {
       <div className="auth-left">
         <div className="auth-left-content">
           <Link to="/" className="auth-logo">
-            <span>🏡 Zamanss Homestay</span>
+            <span>Zamanss Homestay</span>
           </Link>
           <h2>Welcome back!</h2>
           <p>Sign in to manage your bookings, view your history, and enjoy exclusive offers.</p>
-          <div className="auth-features">
-            <div className="auth-feature"><span className="feature-icon">📅</span><span>Manage your bookings easily</span></div>
-            <div className="auth-feature"><span className="feature-icon">🏡</span><span>Access all 5 homestays</span></div>
-            <div className="auth-feature"><span className="feature-icon">🔔</span><span>Get booking notifications</span></div>
-          </div>
         </div>
       </div>
 
@@ -61,20 +61,23 @@ function Login() {
             <div className="form-group">
               <label>Email Address</label>
               <div className="input-wrap">
-                <span className="input-icon">✉️</span>
                 <input type="email" name="email" placeholder="you@example.com"
                   value={form.email} onChange={handleChange} required />
               </div>
             </div>
 
             <div className="form-group">
-              <label>Password</label>
-              <div className="input-wrap">
-                <span className="input-icon">🔒</span>
-                <input type="password" name="password" placeholder="Enter your password"
-                  value={form.password} onChange={handleChange} required />
-              </div>
+            <label style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+              Password
+              <Link to="/forgot-password" style={{fontSize:'0.8rem', color:'var(--primary)', fontWeight:500}}>
+                Forgot password?
+              </Link>
+            </label>
+            <div className="input-wrap">
+              <input type="password" name="password" placeholder="Enter your password"
+                value={form.password} onChange={handleChange} required />
             </div>
+          </div>
 
             <button type="submit" className="auth-btn" disabled={loading}>
               {loading ? 'Signing in...' : 'Sign In'}

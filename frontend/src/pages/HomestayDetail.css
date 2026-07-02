@@ -233,3 +233,50 @@
   .detail-price-block { text-align: left; }
   .amenities-grid { grid-template-columns: 1fr; }
 }
+
+.unavailable-msg {
+  background: #fef2f2;
+  border: 1.5px solid #fecaca;
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.unavailable-msg span {
+  display: block;
+  font-weight: 700;
+  color: #dc2626;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.unavailable-msg small {
+  color: #ef4444;
+  font-size: 0.8rem;
+}
+
+.widget-book-btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.rating-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.rating-summary-score { font-size: 1.6rem; font-weight: 700; }
+.rating-summary-count { color: var(--text-light); font-size: 0.9rem; }
+
+.review-list { display: flex; flex-direction: column; gap: 16px; }
+.review-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+.review-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.review-comment { color: var(--text); margin-bottom: 6px; line-height: 1.5; }
+.review-date { color: var(--text-light); }
+.no-reviews { color: var(--text-light); }
